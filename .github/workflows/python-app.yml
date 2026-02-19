@@ -1,0 +1,71 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Cheezzers (old)
+
+import tkinter as tk
+from tkinter import filedialog, messagebox
+import os
+import subprocess
+
+class CheezzersApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Cheezzers - Software Creator")
+        self.root.geometry("500x400")
+        
+        # UI-Stil: Modern & Old Mix
+        self.mode = tk.StringVar(value="Basic")
+        
+        # Header
+        tk.Label(root, text="Cheezzers", font=("Arial", 20, "bold")).pack(pady=10)
+        
+        # Mode Switch
+        tk.Radiobutton(root, text="Basic Mode", variable=self.mode, value="Basic").pack()
+        tk.Radiobutton(root, text="Expert Mode", variable=self.mode, value="Expert").pack()
+
+        # Dateiauswahl
+        self.file_path = tk.StringVar()
+        tk.Button(root, text="Source Code auswählen", command=self.select_file).pack(pady=10)
+        tk.Label(root, textvariable=self.file_path, fg="blue").pack()
+
+        # Export Optionen
+        tk.Label(root, text="Format wählen:").pack(pady=5)
+        self.format = tk.StringVar(value="exe")
+        tk.OptionMenu(root, self.format, "exe", "deb").pack()
+
+        # Build Button
+        tk.Button(root, text="Build Software", bg="green", fg="white", 
+                  command=self.build_software, height=2, width=20).pack(pady=20)
+
+    def select_file(self):
+        path = filedialog.askopenfilename()
+        if path:
+            self.file_path.set(path)
+
+    def build_software(self):
+        target = self.format.get()
+        source = self.file_path.get()
+        
+        if not source:
+            messagebox.showerror("Fehler", "Bitte erst eine Datei wählen!")
+            return
+
+        if target == "exe":
+            # Nutzt PyInstaller für .exe
+            try:
+                subprocess.run(["pyinstaller", "--onefile", source], check=True)
+                messagebox.showinfo("Erfolg", ".exe wurde im 'dist'-Ordner erstellt!")
+            except Exception as e:
+                messagebox.showerror("Fehler", f"Build fehlgeschlagen: {e}")
+        
+        elif target == "deb":
+            # Logik für .deb Erstellung via dpkg-deb
+            messagebox.showinfo("Info", "Deb-Packaging erfordert eine Ordnerstruktur (DEBIAN/control).")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CheezzersApp(root)
+    root.mainloop()
+
+
