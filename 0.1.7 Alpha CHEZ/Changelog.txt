@@ -1,0 +1,9 @@
+Changelog:
+
+
+1.Added the luxury theme, but scrapped it.(looks awful)
+2.Added ,,Quit" Button, but scrapped it. (Didnt work)
+3.Invented an Changelog.
+4.Foun some corrupt code, but im to lazy to fix it.
+5.Updated my OS to debian 8.
+6.Noting else
